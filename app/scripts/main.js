@@ -1,36 +1,22 @@
 /* Adapted from crossfilter homepage */
-function identity(a) { return a; };
-function noop() {/* Do nothing */};
-
 d3.json("data/ALL_first_37.json", function(error, games) {
-	function plucker(attr, formatter) { 
-		formatter = formatter || identity;
-
-		return function (d) {
-			var val = d[attr];
-
-			return formatter(val);
-		}
-	}
-
-	var formatNumber = d3.format(",d");
+	var formatNumber = d3.format(",d"),
+		pluck = U.plucker('visiting.team.score', Number);
 
 	// NO VAR, GLOBALS FOR TESTING
 		filter = crossfilter(games),
 		all = filter.groupAll(),
-		NO = filter.dimension(plucker('visiting.team.score', Number)),
-		NOs = NO.group(identity);
-
+		DIM = filter.dimension(pluck),
+		GRP = DIM.group(U.identity);
 
 	var chartData = [
 	 	barChart()
-			.dimension(NO)
-			.group(NOs)
+			.dimension(DIM)
+			.group(GRP)
 	    .x(d3.scale.linear()
-	    	.domain([0, 37])
-	    	.rangeRound([0, 4000]))
+	    	.domain([0, 10])
+	    	.rangeRound([0, 130]))
 	];
-
 
 	// Given our array of charts, which we assume are in the same order as the
 	// .chart elements in the DOM, bind the charts to the DOM and render them.
