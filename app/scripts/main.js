@@ -1,5 +1,5 @@
 /* Adapted from crossfilter homepage */
-d3.json("data/ALL_first_37.json", function(error, games) {
+d3.json("data/ALL_last_100.json", function(error, games) {
 	var formatNumber = d3.format(",d"),
 		pluck = U.plucker('visiting.team.score', Number);
 
@@ -14,7 +14,7 @@ d3.json("data/ALL_first_37.json", function(error, games) {
 			.dimension(DIM)
 			.group(GRP)
 	    .x(d3.scale.linear()
-	    	.domain([0, 10])
+	    	.domain([0, 15])
 	    	.rangeRound([0, 130]))
 	];
 

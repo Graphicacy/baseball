@@ -32,9 +32,7 @@ function barChart() {
             .style("display", "none");
 
         g = div.append("svg")
-            // Reed playing with width
-            .attr('width', 500)
-            // .attr("width", width + margin.left + margin.right)
+            .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
           .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
