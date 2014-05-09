@@ -1,21 +1,53 @@
 /* Adapted from crossfilter homepage */
 d3.json("data/ALL_last_100.json", function(error, games) {
 	var formatNumber = d3.format(",d"),
-		pluck = U.plucker('visiting.team.score', Number);
+		pluckVisitingTeamScore = U.plucker('visiting.team.score', Number),
+		pluckHomeTeamScore = U.plucker('home.team.score', Number),
+		pluckDate = U.plucker('date', U.parseALLDate, new Date());
+
+	var last100 = {
+		dateRange: [new Date(2013, 9, 22), new Date(2013, 9, 30)]
+	};
 
 	// NO VAR, GLOBALS FOR TESTING
-		filter = crossfilter(games),
-		all = filter.groupAll(),
-		DIM = filter.dimension(pluck),
-		GRP = DIM.group(U.identity);
+		baseball = crossfilter(games),
+		all = baseball.groupAll(),
+		dimVisitingTeamScore = baseball.dimension(pluckVisitingTeamScore),
+		grpVisitingTeamScore = dimVisitingTeamScore.group(U.identity),
+
+		dimHomeTeamScore = baseball.dimension(pluckHomeTeamScore),
+		grpHomeTeamScore = dimHomeTeamScore.group(U.identity),
+
+		dimDate = baseball.dimension(pluckDate),
+		grpDate = dimDate.group(U.identity);
 
 	var chartData = [
+
+		// Home team runs
 	 	barChart()
-			.dimension(DIM)
-			.group(GRP)
+			.dimension(dimHomeTeamScore)
+			.group(grpHomeTeamScore)
 	    .x(d3.scale.linear()
 	    	.domain([0, 15])
-	    	.rangeRound([0, 130]))
+	    	.rangeRound([0, 140])),
+
+	    // Visiting team runs
+	 	barChart()
+			.dimension(dimVisitingTeamScore)
+			.group(grpVisitingTeamScore)
+	    .x(d3.scale.linear()
+	    	.domain([0, 15])
+	    	.rangeRound([0, 140])),
+
+	    // Date
+	    barChart()
+	        .dimension(dimDate)
+	        .group(grpDate)
+	        .round(d3.time.day.round)
+	      .x(d3.time.scale()
+	        .domain(last100.dateRange)
+	        .rangeRound([0, 10 * 90]))
+	        .filter(last100.dateRange)
 	];
 
 	// Given our array of charts, which we assume are in the same order as the
