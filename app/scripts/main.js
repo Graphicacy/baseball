@@ -55,7 +55,8 @@ d3.json("data/ALL_last_100.json", function(error, games) {
 	// We also listen to the chart's brush events to update the display.
 	var chart = d3.selectAll(".chart")
     	.data(chartData)
-    	.each(function(chart) { 
+    	.each(function(chart) {
+			// Whenever the brush moves, re-rendering everything. 
       		chart.on("brush", renderAll)
       			.on("brushend", renderAll);
       	});
@@ -67,9 +68,18 @@ d3.json("data/ALL_last_100.json", function(error, games) {
 		d3.select(this).call(method);
 	}
 
-	// Whenever the brush moves, re-rendering everything.
 	function renderAll() {
 		chart.each(render);
 		d3.select("#active").text(formatNumber(all.value()));
 	}
+
+	window.filter = function(filters) {
+		filters.forEach(function(d, i) { chartData[i].filter(d); });
+		renderAll();
+	};
+
+	window.reset = function(i) {
+		chartData[i].filter(null);
+		renderAll();
+	};
 });
