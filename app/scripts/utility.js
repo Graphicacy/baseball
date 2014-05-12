@@ -11,7 +11,7 @@ U = Utility = {
 	 * 
 	 */
 	plucker: function (attribute, parser, otherwise) { 
-		parser = parser || identity;
+		parser = parser || this.identity;
 
 		return function (obj) {
 			var value = obj[attribute];
@@ -20,6 +20,13 @@ U = Utility = {
 
 			return parser(value);
 		}
+	},
+
+	/*
+	 * Just throw an error
+	 */
+	err: function (message) {
+		throw new Error(message);
 	},
 
 	/*

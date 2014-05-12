@@ -1,0 +1,55 @@
+/*
+ * Intent: Show a set of games as rectangle
+ * composed of a series of regular, similar rectangles
+ * somehow denoting who won or lost that game
+ *
+ */
+
+function didHomeWin(game) {
+	return didWeWin(game['home.team'], game);
+}
+
+function didWeWin(us, game) {
+
+	var p = parseInt,
+		home = game['home.team'],
+		visit = game['visiting.team'];
+
+	if (us != home && us != visit) U.err('No team w/ that name');
+
+	var weAreHome = game['home.team'] == us,
+		homeScore = game['home.team.score'],
+		visitScore = game['visiting.team.score'],
+		homeWon = p(homeScore) > p(visitScore),
+		homeAndWon = weAreHome && homeWon,
+		awayAndWon = (! weAreHome ) && (! homeWon );
+
+	return homeAndWon || awayAndWon;
+}
+
+function barcodeChart(fnGames, fnFocus) {
+	var pluckKey = U.plucker('key');
+
+	function chart(div) {
+		var games = fnGames(),
+			focus = fnFocus();
+
+		div.each(function () {
+			var game = d3.select(this).selectAll('.game')
+					.data(games),
+				gameEnter = game.enter()
+					.append('div')
+						.attr('class', 'game');
+
+			gameEnter.append('div')
+				.attr('class', 'winLoss')
+				.text(function (d) {
+					return didWeWin(focus, d) ? 'W': 'L';
+				})
+
+			game.exit().remove();
+		});
+	}
+
+	return chart;
+}
