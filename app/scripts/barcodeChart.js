@@ -32,7 +32,8 @@ function barcodeChart(fnGames, fnFocus) {
 
 	function chart(div) {
 		var games = fnGames(),
-			focus = fnFocus();
+			focus = fnFocus(),
+			win = didWeWin.bind(null, focus);
 
 		div.each(function () {
 			var game = d3.select(this).selectAll('.game')
@@ -42,9 +43,11 @@ function barcodeChart(fnGames, fnFocus) {
 						.attr('class', 'game');
 
 			gameEnter.append('div')
-				.attr('class', 'winLoss')
+				.attr('class', function (d) {
+					return win(d) ? 'win': 'loss';
+				})
 				.text(function (d) {
-					return didWeWin(focus, d) ? 'W': 'L';
+					return win(d) ? 'W': 'L';
 				})
 
 			game.exit().remove();
