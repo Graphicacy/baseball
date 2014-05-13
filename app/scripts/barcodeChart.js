@@ -4,36 +4,13 @@
  * somehow denoting who won or lost that game
  *
  */
-
-function didHomeWin(game) {
-	return didWeWin(game['home.team'], game);
-}
-
-function didWeWin(us, game) {
-
-	var p = parseInt,
-		home = game['home.team'],
-		visit = game['visiting.team'];
-
-	if (us != home && us != visit) U.err('No team w/ that name');
-
-	var weAreHome = game['home.team'] == us,
-		homeScore = game['home.team.score'],
-		visitScore = game['visiting.team.score'],
-		homeWon = p(homeScore) > p(visitScore),
-		homeAndWon = weAreHome && homeWon,
-		awayAndWon = (! weAreHome ) && (! homeWon );
-
-	return homeAndWon || awayAndWon;
-}
-
 function barcodeChart(fnGames, fnFocus) {
 	var pluckKey = U.plucker('key');
 
 	function chart(div) {
 		var games = fnGames(),
 			focus = fnFocus(),
-			win = didWeWin.bind(null, focus);
+			win = U.baseball.ALL.didWeWin.bind(null, focus);
 
 		div.each(function () {
 			var game = d3.select(this).selectAll('.game')
@@ -43,10 +20,17 @@ function barcodeChart(fnGames, fnFocus) {
 						.attr('class', 'game')
 
 			gameEnter.append('div')
-						.attr('class', 'game')
 
 			game.text(function (d) {
+					// Todo: try a ordinal scale 
 					return win(d) ? 'W': 'L';
+				})
+				.style('opacity', function (d) {
+					// Todo: Use a scale
+					var home = d['home.team.score'];
+					var visit = d['visiting.team.score'];
+
+					return (Math.abs(home - visit) / 10);
 				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)

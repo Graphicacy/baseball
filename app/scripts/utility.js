@@ -52,6 +52,24 @@ U = Utility = {
 				return new Date(year, month, day);
 			},
 
+			didWeWin: function (us, game) {
+
+				var p = parseInt,
+					home = game['home.team'],
+					visit = game['visiting.team'];
+
+				if (us != home && us != visit) U.err('No team w/ that name');
+
+				var weAreHome = game['home.team'] == us,
+					homeScore = game['home.team.score'],
+					visitScore = game['visiting.team.score'],
+					homeWon = p(homeScore) > p(visitScore),
+					homeAndWon = weAreHome && homeWon,
+					awayAndWon = (! weAreHome ) && (! homeWon );
+
+				return homeAndWon || awayAndWon;
+			},
+
 			logGame: function (game) {
 				var facade = {
 						home: game['home.team'],

@@ -19,11 +19,12 @@ body {
 .barcode {
 	border: 1px solid #e3e3e3;
 	height: 20px;
+	width: 300px;
 }
 
 .barcode .game {
 	display: inline-block;
-	width: 50px;
+	width: 20px;
 	height: 20px;
 	text-align: center;
 }
