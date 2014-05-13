@@ -14,3 +14,24 @@ body {
 .chart {
     width: 800px;
 }
+
+/* Begin barcode styling */
+.barcode {
+	border: 1px solid #e3e3e3;
+	height: 20px;
+}
+
+.barcode .game {
+	display: inline-block;
+	width: 50px;
+	height: 20px;
+	text-align: center;
+}
+
+.barcode .game.loss {
+	background-color: red;
+}
+
+.barcode .game.win {
+	background-color: green;
+}

@@ -1,16 +1,20 @@
 /* Adapted from crossfilter homepage */
-d3.json("data/ALL_last_100.json", function(error, games) {
+// Bad global setup...
+var last100 = {
+	dateRange: [new Date(2013, 9, 22), new Date(2013, 9, 30)],
+	filePath: 'data/ALL_last_100.json'
+};
+
+var settings = last100;
+
+d3.json(settings.filePath, function(error, games) {
 	var formatNumber = d3.format(",d"),
+		parseDate = U.baseball.ALL.parseDate;
 		pluckVisitingTeamScore = U.plucker('visiting.team.score', Number),
 		pluckHomeTeamScore = U.plucker('home.team.score', Number),
-		pluckDate = U.plucker('date', U.parseALLDate, new Date()),
+		pluckDate = U.plucker('date', parseDate, new Date()),
 		pluckHomeTeam = U.plucker('home.team'),
 		pluckVisitingTeam = U.plucker('visiting.team');
-
-	var last100 = {
-		dateRange: [new Date(2013, 9, 22), new Date(2013, 9, 30)]
-	};
-
 	var teams = [];
 
 	_.each(games, function (game) {
@@ -38,41 +42,12 @@ d3.json("data/ALL_last_100.json", function(error, games) {
 			return pluckHomeTeam(d) + '|' + pluckVisitingTeam(d);
 		});
 
-	var chartData = [
-
-		// Home team runs
-	 	barChart()
-			.dimension(dimHomeTeamScore)
-			.group(grpHomeTeamScore)
-	    .x(d3.scale.linear()
-	    	.domain([0, 15])
-	    	.rangeRound([0, 140])),
-
-	    // Visiting team runs
-	 	barChart()
-			.dimension(dimVisitingTeamScore)
-			.group(grpVisitingTeamScore)
-	    .x(d3.scale.linear()
-	    	.domain([0, 15])
-	    	.rangeRound([0, 140])),
-
-	    // Date
-	    barChart()
-	        .dimension(dimDate)
-	        .group(grpDate)
-	        .round(d3.time.day.round)
-	      .x(d3.time.scale()
-	        .domain(last100.dateRange)
-	        .rangeRound([0, 10 * 90]))
-	        .filter(last100.dateRange)
-	];
-
 	function barcodeGames() {
 		dimTeamNames.filter(function (d) {
 			return d.indexOf(currentFocus) != -1;
 		});
 
-		return dimTeamNames.top(40);
+		return dimDate.top(40);
 	}
 
 	function barcodeFocus() {
@@ -94,12 +69,12 @@ d3.json("data/ALL_last_100.json", function(error, games) {
 	// .chart elements in the DOM, bind the charts to the DOM and render them.
 	// We also listen to the chart's brush events to update the display.
 	var chart = d3.selectAll(".chart")
-    	.data(chartData)
-    	.each(function(chart) {
-			// Whenever the brush moves, re-rendering everything. 
-      		chart.on("brush", renderAll)
-      			.on("brushend", renderAll);
-      	});
+   //  	.data(chartData)
+   //  	.each(function(chart) {
+			// // Whenever the brush moves, re-rendering everything. 
+   //    		chart.on("brush", renderAll)
+   //    			.on("brushend", renderAll);
+   //    	});
 
     // Render list
 	var list = d3.selectAll(".list")

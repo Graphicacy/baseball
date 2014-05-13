@@ -1,5 +1,7 @@
 function initSelect(teamList) {
 
+	var getName =  U.plucker('name');
+
 	teamList = _.map(teamList, function (name) {
 		return { name: name };
 	});
@@ -8,13 +10,16 @@ function initSelect(teamList) {
 		.append("select")
 		.on("change", change);
 	var options = select.selectAll('option')
-		.data(teamList, U.plucker('name'));
+		.data(teamList, getName);
 
 	// Enter selection
 	options.enter()
 		.append("option")
 		.text(U.plucker('name'))
-		.attr('value', U.plucker('name'));
+		.attr('value', U.plucker('name'))
+		.sort(function (a, b) { 
+			return getName(a).localeCompare(getName(b))
+		});
 
 	function change() {
 	    var selectedIndex = select.property('selectedIndex');

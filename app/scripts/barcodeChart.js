@@ -40,12 +40,16 @@ function barcodeChart(fnGames, fnFocus) {
 					.data(games),
 				gameEnter = game.enter()
 					.append('div')
-						.attr('class', 'game');
+						.attr('class', 'game')
+						.attr('class', function (d) {
+							return 'game ' + (win(d) ? 'win': 'loss');
+						})
+						.on('click', U.baseball.ALL.logGame)
+						.sort(function (a, b) {
+							return a.date.localeCompare(b.date);
+						});
 
 			gameEnter.append('div')
-				.attr('class', function (d) {
-					return win(d) ? 'win': 'loss';
-				})
 				.text(function (d) {
 					return win(d) ? 'W': 'L';
 				})
