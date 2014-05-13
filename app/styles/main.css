@@ -17,12 +17,18 @@ body {
 
 /* Begin barcode styling */
 .barcode {
-	border: 1px solid #e3e3e3;
 	height: 20px;
 	width: 300px;
+
+	position: relative;
 }
 
 .barcode .game {
+	position: absolute;
+	top: 0;
+
+	cursor: pointer;
+
 	display: inline-block;
 	width: 20px;
 	height: 20px;
@@ -51,7 +57,7 @@ body {
 
 /* Begin text list styling */
 .list {
-	position: fixed;
+	position: absolute;
 	top: 5px;
 	right: 30px;
 }
