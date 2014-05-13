@@ -53,8 +53,19 @@ U = Utility = {
 			},
 
 			logGame: function (game) {
+				var facade = {
+						home: game['home.team'],
+						homeScore: game['home.team.score'],
+						away: game['visiting.team'],
+						awayScore: game['visiting.team.score'],
+						date: game['date']
+					},
+					template = 'Baseball <%= date %>: H <%= home %> (<%= homeScore %>) v. A <%= away %> (<%= awayScore %>) ==>',
+					msg = _.template(template, facade);
+
 				U._ = game;
-				U.log('A game between ', game['home.team'], ' and ', game['visiting.team'], ':', game)
+				U.log(msg, game);
+				// U.log('A game between ', game['home.team'], ' and ', game['visiting.team'], ':', game)
 			}
 		}
 	}

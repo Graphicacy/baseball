@@ -41,18 +41,18 @@ function barcodeChart(fnGames, fnFocus) {
 				gameEnter = game.enter()
 					.append('div')
 						.attr('class', 'game')
-						.attr('class', function (d) {
-							return 'game ' + (win(d) ? 'win': 'loss');
-						})
-						.on('click', U.baseball.ALL.logGame)
-						.sort(function (a, b) {
-							return a.date.localeCompare(b.date);
-						});
 
 			gameEnter.append('div')
-				.text(function (d) {
+						.attr('class', 'game')
+
+			game.text(function (d) {
 					return win(d) ? 'W': 'L';
 				})
+				.classed('win', win)
+				.on('click', U.baseball.ALL.logGame)
+				.sort(function (a, b) {
+					return a.date.localeCompare(b.date);
+				});
 
 			game.exit().remove();
 		});

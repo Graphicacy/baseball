@@ -11,7 +11,7 @@ var formatDate = d3.time.format("%B %d, %Y"),
       });
 
 function gameList(div) {
-  var gamesByDate = nestByDate.entries(dimDate.top(40));
+  var gamesByDate = nestByDate.entries(dimDate.bottom(100));
 
   div.each(function() {
     var date = d3.select(this).selectAll(".date")
@@ -26,7 +26,7 @@ function gameList(div) {
     date.exit().remove();
 
     var game = date.order().selectAll(".game")
-        .data(U.plucker('values'), U.plucker('index'));
+        .data(U.plucker('values'), U.plucker('index', Number));
 
     var gameEnter = game.enter().append("div")
         .attr("class", "game");

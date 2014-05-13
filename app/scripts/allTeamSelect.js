@@ -15,18 +15,17 @@ function initSelect(teamList) {
 	// Enter selection
 	options.enter()
 		.append("option")
-		.text(U.plucker('name'))
-		.attr('value', U.plucker('name'))
+		.text(getName)
+		.attr('value', getName)
 		.sort(function (a, b) { 
 			return getName(a).localeCompare(getName(b))
 		});
 
 	function change() {
-	    var selectedIndex = select.property('selectedIndex');
-	    var chosen = options[0][selectedIndex];
-	    var payload = { chosen: $(chosen).val() };
+		var $select = $(this),
+			$selected = $select.find(':selected'),
+			payload = { chosen: $selected.val() };
 
-	    $(document.body).trigger('team.select', 
-	    	payload)
+	    $.trigger('team.select', payload)
 	}
 }

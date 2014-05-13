@@ -15,16 +15,23 @@ d3.json(settings.filePath, function(error, games) {
 		pluckDate = U.plucker('date', parseDate, new Date()),
 		pluckHomeTeam = U.plucker('home.team'),
 		pluckVisitingTeam = U.plucker('visiting.team');
+
+	// BEGIN DATA PREPROCESSING
+	// TODO: put this somewhere better
 	var teams = [];
 
-	_.each(games, function (game) {
+	_.each(games, function (game, i) {
 		teams.push(pluckHomeTeam(game));
 		teams.push(pluckVisitingTeam(game));
+
+		// add an index
+		game.index = i;
 	});
 
 	teams = _.unique(teams);
+	// END DATA PREPROCESSING
 
-	var currentFocus = 'CHN';
+	var currentFocus = 'ANA';
 
 	// NO VAR, GLOBALS FOR TESTING
 		baseball = crossfilter(games),
@@ -60,25 +67,14 @@ d3.json(settings.filePath, function(error, games) {
 
 	initSelect(teams);
 
-	$(document.body).on('team.select', function (b, a) { 
+	$.on('team.select', function (evt, a) { 
 		currentFocus = a.chosen;
-		renderAll();
+		view_dirtied();
 	});
-
-	// Given our array of charts, which we assume are in the same order as the
-	// .chart elements in the DOM, bind the charts to the DOM and render them.
-	// We also listen to the chart's brush events to update the display.
-	var chart = d3.selectAll(".chart")
-   //  	.data(chartData)
-   //  	.each(function(chart) {
-			// // Whenever the brush moves, re-rendering everything. 
-   //    		chart.on("brush", renderAll)
-   //    			.on("brushend", renderAll);
-   //    	});
 
     // Render list
 	var list = d3.selectAll(".list")
-      .data([gameList, gameList]);
+      .data([gameList]);
 
     var barcode = d3.selectAll('.barcode')
     	.data(barcodeChartData);
@@ -87,27 +83,19 @@ d3.json(settings.filePath, function(error, games) {
 	d3.selectAll("#total")
       .text(formatNumber(baseball.size()));
 
-	renderAll();
+	// Setup re-render listeners
+	$.on('dirty_view', function () {
+		barcode.each(render);
+		list.each(render);
+		d3.select("#active").text(formatNumber(all.value()));
+	});
 
 	// Renders the specified chart or list.
 	function render(method) {
 		d3.select(this).call(method);
 	}
 
-	function renderAll() {
-		list.each(render);
-		chart.each(render);
-		barcode.each(render);
-		d3.select("#active").text(formatNumber(all.value()));
-	}
+	var view_dirtied = $.trigger.bind(null, 'dirty_view');
 
-	window.filter = function(filters) {
-		filters.forEach(function(d, i) { chartData[i].filter(d); });
-		renderAll();
-	};
-
-	window.reset = function(i) {
-		chartData[i].filter(null);
-		renderAll();
-	};
+	view_dirtied();
 });

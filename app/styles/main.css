@@ -28,7 +28,7 @@ body {
 	text-align: center;
 }
 
-.barcode .game.loss {
+.barcode .game {
 	background-color: red;
 }
 
