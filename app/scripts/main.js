@@ -5,14 +5,19 @@ var last100 = {
 	filePath: 'data/ALL_last_100.json'
 };
 
-var settings = last100;
+var last1857 = {
+	dateRange: [new Date(2013, 5, 15), new Date(2013, 9, 29)],
+	filePath: 'data/ALL_last_1857.json'
+};
+
+var settings = last1857;
 
 d3.json(settings.filePath, function(error, games) {
 	var formatNumber = d3.format(",d"),
 		parseDate = U.baseball.ALL.parseDate;
 		pluckVisitingTeamScore = U.plucker('visiting.team.score', Number),
 		pluckHomeTeamScore = U.plucker('home.team.score', Number),
-		pluckDate = U.plucker('date', parseDate, new Date()),
+		pluckDate = U.plucker('jsDate'),
 		pluckHomeTeam = U.plucker('home.team'),
 		pluckVisitingTeam = U.plucker('visiting.team');
 
@@ -26,6 +31,9 @@ d3.json(settings.filePath, function(error, games) {
 
 		// add an index
 		game.index = i;
+
+		// Translate the date to something nice
+		game.jsDate = new Date(parseDate(game.date));
 	});
 
 	teams = _.unique(teams);
@@ -44,10 +52,16 @@ d3.json(settings.filePath, function(error, games) {
 
 		dimDate = baseball.dimension(pluckDate),
 		grpDate = dimDate.group(U.identity),
+		grpDateByMonth = dimDate.group(d3.time.month)
 
 		dimTeamNames = baseball.dimension(function (d) {
 			return pluckHomeTeam(d) + '|' + pluckVisitingTeam(d);
-		});
+		}),
+		chunkTime = d3.time.day,
+		nestTimeChunks = d3.nest()
+			.key(function (d) {
+				chunkTime(d.jsDate);
+			});
 
 	function barcodeGames() {
 		dimTeamNames.filter(function (d) {

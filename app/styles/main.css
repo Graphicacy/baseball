@@ -36,3 +36,23 @@ body {
 .barcode .game.win {
 	background-color: green;
 }
+/* End barcode styling */
+/* Begin total */
+.totalz {
+	position: fixed;
+	top: 5px;
+	left: 5px;
+}
+
+.totalz div {
+	display: inline-block;
+}
+/* End total */
+
+/* Begin text list styling */
+.list {
+	position: fixed;
+	top: 5px;
+	right: 30px;
+}
+/* End text list styling */

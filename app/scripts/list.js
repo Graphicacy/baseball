@@ -1,17 +1,14 @@
 var formatDate = d3.time.format("%B %d, %Y"),
     formatTime = d3.time.format("%I:%M %p"),
 
-    parseDate = U.baseball.ALL.parseDate,
-
     // A nest operator, for grouping the game list.
-    nestByDate = d3.nest()
+    nestByDay = d3.nest()
       .key(function(d) { 
-        var date = parseDate(d.date)
-        return d3.time.day(date); 
+        return d3.time.day(d.jsDate); 
       });
 
 function gameList(div) {
-  var gamesByDate = nestByDate.entries(dimDate.bottom(100));
+  var gamesByDate = nestByDay.entries(dimDate.bottom(100));
 
   div.each(function() {
     var date = d3.select(this).selectAll(".date")
@@ -21,7 +18,7 @@ function gameList(div) {
         .attr("class", "date")
       .append("div")
         .attr("class", "day")
-        .text(function(d) { return formatDate(parseDate(d.values[0].date)); });
+        .text(function(d) { return formatDate(d.values[0].jsDate); });
 
     date.exit().remove();
 

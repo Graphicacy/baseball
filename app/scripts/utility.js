@@ -6,7 +6,7 @@ U = Utility = {
 	logger: function (message) {
 		return console.log.bind(console, message)
 	},
-
+	
 	/* 
 	 * Factory for "pluck" functions
 	 * Use:
