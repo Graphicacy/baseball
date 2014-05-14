@@ -20,6 +20,8 @@ body {
 	height: 20px;
 	width: 300px;
 
+	margin-bottom: 10px;
+
 	position: relative;
 }
 
@@ -36,7 +38,7 @@ body {
 }
 
 .barcode .game {
-	background-color: red;
+	background-color: grey;
 }
 
 .barcode .game.win {

@@ -10,7 +10,12 @@ var last1857 = {
 	filePath: 'data/ALL_last_1857.json'
 };
 
-var settings = last1857;
+var last3715 = {
+	dateRange: [new Date(2012, 6, 29), new Date(2013, 9, 29)],
+	filePath: 'data/ALL_last_3715.json'
+};
+
+var settings = last3715;
 
 d3.json(settings.filePath, function(error, games) {
 	var formatNumber = d3.format(",d"),
@@ -39,7 +44,7 @@ d3.json(settings.filePath, function(error, games) {
 	teams = _.unique(teams);
 	// END DATA PREPROCESSING
 
-	var currentFocus = 'ANA';
+	var currentFocus; 
 
 	// NO VAR, GLOBALS FOR TESTING
 		baseball = crossfilter(games),
@@ -63,53 +68,52 @@ d3.json(settings.filePath, function(error, games) {
 				chunkTime(d.jsDate);
 			});
 
-	function barcodeGames() {
+	var barcodeChartData = [
+		barcodeChartList()
+			.fnGames(function () {
+				return dimDate.top(Infinity);
+			})
+	];
+
+	$.on('team.select', function (evt, payload) {
+		currentFocus = payload.chosen;
+
 		dimTeamNames.filter(function (d) {
 			return d.indexOf(currentFocus) != -1;
 		});
 
-		return dimDate.top(40);
-	}
+		_.each(barcodeChartData, function (d) {
+			d.focus(currentFocus);
+		});
 
-	function barcodeFocus() {
-		return currentFocus;
-	}
+		$.trigger('dirty.view');
+	});
 
-	var barcodeChartData = [
-		barcodeChart(barcodeGames, barcodeFocus)
-	];
-
-	initSelect(teams);
-
-	$.on('team.select', function (evt, a) { 
-		currentFocus = a.chosen;
-		view_dirtied();
+	// Setup re-render listeners
+	$.on('dirty.view', function () {
+		barcode.each(render);
+		list.each(render);
+		d3.select("#active").text(formatNumber(all.value()));
 	});
 
     // Render list
 	var list = d3.selectAll(".list")
       .data([gameList]);
 
-    var barcode = d3.selectAll('.barcode')
+    var barcode = d3.selectAll('.barcodeList')
     	.data(barcodeChartData);
 
 	// Render the total.
 	d3.selectAll("#total")
       .text(formatNumber(baseball.size()));
 
-	// Setup re-render listeners
-	$.on('dirty_view', function () {
-		barcode.each(render);
-		list.each(render);
-		d3.select("#active").text(formatNumber(all.value()));
-	});
-
 	// Renders the specified chart or list.
 	function render(method) {
 		d3.select(this).call(method);
 	}
 
-	var view_dirtied = $.trigger.bind(null, 'dirty_view');
+	initSelect(teams);
 
-	view_dirtied();
+	// Select a team to begin!
+	$.trigger('team.select', { chosen: 'ANA' });
 });
