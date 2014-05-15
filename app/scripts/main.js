@@ -15,6 +15,12 @@ var last3715 = {
 	filePath: 'data/ALL_last_3715.json'
 };
 
+/* Don't use, too big! breaks everything */
+var ALL = {
+	dateRange: [new Date(1900, 04, 20), new Date(2013, 9, 29)],
+	filePath: 'data/ALL.json'
+}
+
 var settings = last3715;
 
 d3.json(settings.filePath, function(error, games) {
@@ -68,13 +74,6 @@ d3.json(settings.filePath, function(error, games) {
 				chunkTime(d.jsDate);
 			});
 
-	var barcodeChartData = [
-		barcodeChartList()
-			.fnGames(function () {
-				return dimDate.top(Infinity);
-			})
-	];
-
 	$.on('team.select', function (evt, payload) {
 		currentFocus = payload.chosen;
 
@@ -82,7 +81,7 @@ d3.json(settings.filePath, function(error, games) {
 			return d.indexOf(currentFocus) != -1;
 		});
 
-		_.each(barcodeChartData, function (d) {
+		_.each(tickChartData, function (d) {
 			d.focus(currentFocus);
 		});
 
@@ -91,17 +90,25 @@ d3.json(settings.filePath, function(error, games) {
 
 	// Setup re-render listeners
 	$.on('dirty.view', function () {
-		barcode.each(render);
+		tick.each(render);
 		list.each(render);
 		d3.select("#active").text(formatNumber(all.value()));
 	});
+
+	var tickChartData = [
+		tickChart()
+			.fnGames(function () {
+				return dimDate.top(Infinity);
+			})
+	];
 
     // Render list
 	var list = d3.selectAll(".list")
       .data([gameList]);
 
-    var barcode = d3.selectAll('.barcodeList')
-    	.data(barcodeChartData);
+    // Render tick
+    var tick = d3.selectAll('.tick')
+    	.data(tickChartData);
 
 	// Render the total.
 	d3.selectAll("#total")

@@ -4,7 +4,7 @@
  * somehow denoting who won or lost that game
  *
  */
-function barcodeChart() {
+function tickChart() {
 	var clazz = arguments.callee;
 
 	if ( ! clazz.id ) clazz.id = 0;
@@ -21,38 +21,26 @@ function barcodeChart() {
 		var pxWidth = 300,
 			games = fnGames(),
 			x = d3.scale.ordinal()
-					.domain(d3.range(games.length))
-					.rangeRoundBands([pxWidth, 0]),
+				.domain(d3.range(games.length))
+				.rangeRoundBands([pxWidth, 0]),
 			win = U.baseball.ALL.didWeWin.bind(null, focus);
 
 		div.each(function () {
-			var gameUpdate = d3.select(this)
-					.append('div')
-					.attr('class', 'barcode').selectAll('.game')
-						.data(games),
+			var gameUpdate = d3.select(this).selectAll('.game')
+								.data(games),
 				gameEnter = gameUpdate.enter()
-					.append('div')
-						.attr('class', 'game')
+								.append('div')
+									.attr('class', 'game');
 
-			gameEnter.append('div')
-
-			gameUpdate.style('opacity', function (d) {
-					// Todo: Use a scale
-					var home = d['home.team.score'];
-					var visit = d['visiting.team.score'];
-
-					return (Math.abs(home - visit) / 10);
-				})
-				.style('width', x.rangeBand() + 'px')
-				.style('left', function (d, i) {
-					return x(i) + 'px';
+			gameUpdate.style('left', function (d, i) {
+					return x(i) + 'px'
 				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)
-				.sort(U.baseball.ALL.dateCompare);
+				.sort(U.baseball.ALL.dateCompare)
 
 			gameUpdate.exit().remove();
-		});
+		})
 	}
 
 	chart.x = function(_) {
@@ -73,5 +61,5 @@ function barcodeChart() {
       return chart;
     };
 
-	return chart;
+    return chart;
 }

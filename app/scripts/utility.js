@@ -70,6 +70,10 @@ U = Utility = {
 				return homeAndWon || awayAndWon;
 			},
 
+			dateCompare: function (a, b) {
+				return a.date.localeCompare(b.date);
+			},
+
 			logGame: function (game) {
 				var facade = {
 						home: game['home.team'],

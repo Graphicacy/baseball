@@ -35,9 +35,6 @@ body {
 	width: 20px;
 	height: 20px;
 	text-align: center;
-}
-
-.barcode .game {
 	background-color: grey;
 }
 
@@ -64,3 +61,37 @@ body {
 	right: 30px;
 }
 /* End text list styling */
+
+/* Begin tickChart styling */
+.tick .game {
+	position: absolute;
+	top: 0px;
+
+	background-color: black;
+	width: 1px;
+	height: 10px;
+
+
+	cursor: pointer;
+/*
+    transform: rotate(-45deg);
+    transform-origin: 0 -5px;*/
+    border-radius: 2px;
+}
+
+.tick .game.win {
+	top: -10px; /* Same as -1 * height */
+
+/*
+    transform: rotate(45deg);
+    transform-origin: 0 5px;*/
+}
+
+.tick {
+	margin-top: 30px;
+	width: 300px;
+	height: 1px;
+	border-top: solid 1px black;
+	position: relative;
+}
+/* End tickChart styling */
