@@ -26,7 +26,13 @@ function tickChart() {
 			y = d3.scale.linear()
 				.domain([0, 1])
 				.range([0, pxHeight]),
-			win = U.baseball.ALL.didWeWin.bind(null, focus);
+			win = U.baseball.ALL.didWeWin.bind(null, focus),
+			triggerHover = function (game, index) {
+				$.trigger('tick.hover', {
+					game: game,
+					index: index
+				});
+			};
 
 		div.each(function () {
 			var gameUpdate = d3.select(this).selectAll('.game')
@@ -48,6 +54,7 @@ function tickChart() {
 				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)
+				.on('mouseenter', triggerHover)
 				.sort(U.baseball.ALL.dateCompare)
 
 			gameUpdate.exit().remove();

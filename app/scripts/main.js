@@ -5,7 +5,8 @@
 var settings = ALL.last3715;
 
 d3.json(settings.filePath, function(error, games) {
-	var formatNumber = d3.format(",d"),
+	var beginningTeam = 'ANA',
+		formatNumber = d3.format(",d"),
 		parseDate = U.baseball.ALL.parseDate;
 		pluckVisitingTeamScore = U.plucker('visiting.team.score', Number),
 		pluckHomeTeamScore = U.plucker('home.team.score', Number),
@@ -59,7 +60,7 @@ d3.json(settings.filePath, function(error, games) {
 		return dimDate.top(Infinity);
 	}
 
-	$.on('team.select', function (evt, payload) {
+	$.on('team.select', function (payload) {
 		currentFocus = payload.chosen;
 
 		dimTeamNames.filter(function (d) {
@@ -91,6 +92,13 @@ d3.json(settings.filePath, function(error, games) {
 		d3.select(this).call(method);
 	}
 
+	$.on('tick.hover', function (hovered) {
+		var game = hovered.game,
+			index = hovered.index;
+
+		scrollList(game, index);
+	})
+
 	function fnGames() {
 		return dimDate.top(Infinity);
 	}
@@ -115,5 +123,5 @@ d3.json(settings.filePath, function(error, games) {
 	initSelect(teams);
 
 	// Select a team to begin!
-	$.trigger('team.select', { chosen: 'ANA' });
+	$.trigger('team.select', { chosen: beginningTeam });
 });

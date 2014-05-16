@@ -9,6 +9,7 @@
 body {
     padding-top: 20px;
     padding-bottom: 20px;
+    max-height: 100%;
 }
 
 .chart {
@@ -56,9 +57,17 @@ body {
 
 /* Begin text list styling */
 .list {
+	width: 100%;
+}
+
+.listContainer {
 	position: absolute;
 	top: 5px;
 	right: 30px;
+
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 /* End text list styling */
 

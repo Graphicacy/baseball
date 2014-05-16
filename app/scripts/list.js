@@ -1,3 +1,8 @@
+/* I'm in need of major improvements!! */
+
+/* 
+ * Need to be update to closed-function style!
+ */
 var formatDate = d3.time.format("%B %d, %Y"),
     formatTime = d3.time.format("%I:%M %p"),
 
@@ -6,6 +11,10 @@ var formatDate = d3.time.format("%B %d, %Y"),
       .key(function(d) { 
         return d3.time.day(d.jsDate); 
       });
+
+function scrollList(game, index) {
+  
+}
 
 function gameList(div) {
   var gamesByDate = nestByDay.entries(dimDate.bottom(100));
