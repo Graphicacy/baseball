@@ -12,12 +12,20 @@ var formatDate = d3.time.format("%B %d, %Y"),
         return d3.time.day(d.jsDate); 
       });
 
+var pxHeightListItem  = 60;
+
 function scrollList(game, index) {
-  
+  $('.listContainer').scrollTo( index * pxHeightListItem + 'px')
+
+  var dates = $('.listContainer .date');
+  dates.removeClass('selected');
+
+  $(dates.get(index)).addClass('selected');
 }
 
 function gameList(div) {
-  var gamesByDate = nestByDay.entries(dimDate.bottom(100));
+  // DUplicating fnGames() in main.js
+  var gamesByDate = nestByDay.entries(dimDate.top(Infinity));
 
   div.each(function() {
     var date = d3.select(this).selectAll(".date")

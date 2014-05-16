@@ -66,8 +66,17 @@ body {
 	right: 30px;
 
 	height: 100%;
+	width: 240px;
 	overflow-y: auto;
 	overflow-x: hidden;
+}
+.date {
+	height: 60px;
+}
+
+.date.selected {
+	background-color: blue;
+	color: #ffffff;
 }
 /* End text list styling */
 
