@@ -29,31 +29,20 @@ function lineChart() {
 					.x(xOfIndex)
 					.y(y),
 			win = U.baseball.ALL.didWeWin.bind(null, focus),
-			data = U.baseball.ALL.calculateRunningAverage(games, focus);
-		
+			avg = U.baseball.ALL.calculateRunningAverage(games, focus),
+			avgLine = line(avg);
 
 		div.each(function () {
-			var graph = div.append('svg:svg')
-					.attr('width', pxWidth)
-					.attr('height', pxHeight)
-				.append('svg:g')
+			var graph = d3.select('.lineSvgWrapper g').selectAll('path')
+				.data([Math.random()]);
 
-			// var xAxis = d3.svg.axis().scale(x).tickSize(pxHeight).tickSubdivide(true);
+			graph.attr('d', avgLine)
 
-			// graph.append('svg:g')
-			// 	.attr('class', 'x axis')
-			// 	.call(xAxis);
+			graph.enter()
+				.append('svg:path')
+					.attr('d', avgLine)
 
-			// var yAxisLeft = d3.svg.axis()
-			// 					.scale(y)
-			// 					.ticks(4)
-			// 					.orient('left');
-
-			// graph.append('svg:g')
-			// 	.attr('class', 'y axis')
-			// 	.call(yAxisLeft)
-
-			graph.append('svg:path').attr('d', line(data))
+			graph.exit().remove();
 		})
 	}
 

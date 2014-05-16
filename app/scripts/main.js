@@ -1,15 +1,10 @@
 /* Adapted from crossfilter homepage */
 // Bad global setup...
-
-
 var settings = ALL.last3715;
 
 d3.json(settings.filePath, function(error, games) {
-	var beginningTeam = 'ANA',
-		formatNumber = d3.format(",d"),
+	var formatNumber = d3.format(",d"),
 		parseDate = U.baseball.ALL.parseDate;
-		pluckVisitingTeamScore = U.plucker('visiting.team.score', Number),
-		pluckHomeTeamScore = U.plucker('home.team.score', Number),
 		pluckDate = U.plucker('jsDate'),
 		pluckHomeTeam = U.plucker('home.team'),
 		pluckVisitingTeam = U.plucker('visiting.team');
@@ -37,24 +32,13 @@ d3.json(settings.filePath, function(error, games) {
 	// NO VAR, GLOBALS FOR TESTING
 		baseball = crossfilter(games),
 		all = baseball.groupAll(),
-		dimVisitingTeamScore = baseball.dimension(pluckVisitingTeamScore),
-		grpVisitingTeamScore = dimVisitingTeamScore.group(U.identity),
-
-		dimHomeTeamScore = baseball.dimension(pluckHomeTeamScore),
-		grpHomeTeamScore = dimHomeTeamScore.group(U.identity),
 
 		dimDate = baseball.dimension(pluckDate),
-		grpDate = dimDate.group(U.identity),
-		grpDateByMonth = dimDate.group(d3.time.month)
+		grpDate = dimDate.group(),
 
 		dimTeamNames = baseball.dimension(function (d) {
 			return pluckHomeTeam(d) + '|' + pluckVisitingTeam(d);
-		}),
-		chunkTime = d3.time.day,
-		nestTimeChunks = d3.nest()
-			.key(function (d) {
-				chunkTime(d.jsDate);
-			});
+		});
 
 	function fnGames() {
 		return dimDate.top(Infinity);
@@ -97,11 +81,7 @@ d3.json(settings.filePath, function(error, games) {
 			index = hovered.index;
 
 		scrollList(game, index);
-	})
-
-	function fnGames() {
-		return dimDate.top(Infinity);
-	}
+	});
 
 	var chartData = [
 		lineChart(),
@@ -123,5 +103,5 @@ d3.json(settings.filePath, function(error, games) {
 	initSelect(teams);
 
 	// Select a team to begin!
-	$.trigger('team.select', { chosen: beginningTeam });
+	$.trigger('team.select', { chosen: settings.beginningTeam });
 });

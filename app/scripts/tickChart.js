@@ -44,14 +44,6 @@ function tickChart() {
 			gameUpdate.style('left', function (d, i) {
 					return x(i) + 'px';
 				})
-				.style('top', function (d, i) {
-					var winVariance = win(d) ? -10 : 0,
-						avg = averageData[i],
-						pt = y(avg) + winVariance;
-
-
-					return pt + 'px';
-				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)
 				.on('mouseenter', triggerHover)
@@ -60,12 +52,6 @@ function tickChart() {
 			gameUpdate.exit().remove();
 		})
 	}
-
-	chart.x = function(_) {
-      if (!arguments.length) return x;
-      x = _;
-      return chart;
-    };
 
 	chart.averageData = function(_) {
       if (!arguments.length) return averageData;
