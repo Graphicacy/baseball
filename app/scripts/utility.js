@@ -6,6 +6,21 @@ U = Utility = {
 	logger: function (message) {
 		return console.log.bind(console, message)
 	},
+	sum: function (a, b) { return a + b; },
+
+	filled_array: function (length, value) {
+		var arr = [];
+
+		arr.length = length;
+
+		return _.map(arr, function () {
+			return value;
+		});
+	},
+
+	mean: function (arr) {
+		return _.reduce(arr, U.sum) / arr.length;
+	},
 	
 	/* 
 	 * Factory for "pluck" functions
@@ -72,6 +87,30 @@ U = Utility = {
 
 			dateCompare: function (a, b) {
 				return a.date.localeCompare(b.date);
+			}, 
+
+			// Return an array of length games.length 
+			// Where each point represents the
+			// running average for the W/L record
+			// of team focus in the set of games
+			calculateRunningAverage: function (games, focus) {
+				var avgs = [],
+					chunkSize = Math.floor(games.length / 10),
+					// start'm at 50%
+					chunk = U.filled_array(chunkSize, 0.5),
+					mean = U.mean,
+					win = U.baseball.ALL.didWeWin;
+
+				_.each(games, function (g, i) {
+					// Dispose of the old, and insert the new
+					var won = win(focus, g)
+					chunk.shift();
+					chunk.push(won ? 1 : 0);
+
+					avgs.push(mean(chunk));
+				});
+
+				return avgs;
 			},
 
 			logGame: function (game) {

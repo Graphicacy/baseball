@@ -1,6 +1,6 @@
 /*
  * Intent: Show a set of games as rectangle
- * composed of a series of regular, similar rectangles
+ * composed of a series of tick marks
  * somehow denoting who won or lost that game
  *
  */
@@ -10,19 +10,22 @@ function tickChart() {
 	if ( ! clazz.id ) clazz.id = 0;
 
 	var id = clazz.id++,
-		fnGames,
+		pxWidth = 300,
+		pxHeight = 100,
 		x,
 		group,
 		focus,
 		round,
-		axis;
+		games,
+		averageData;
 
 	function chart(div) {
-		var pxWidth = 300,
-			games = fnGames(),
-			x = d3.scale.ordinal()
+		var x = d3.scale.ordinal()
 				.domain(d3.range(games.length))
-				.rangeRoundBands([pxWidth, 0]),
+				.rangeBands([pxWidth, 0]),
+			y = d3.scale.linear()
+				.domain([0, 1])
+				.range([0, pxHeight]),
 			win = U.baseball.ALL.didWeWin.bind(null, focus);
 
 		div.each(function () {
@@ -33,7 +36,15 @@ function tickChart() {
 									.attr('class', 'game');
 
 			gameUpdate.style('left', function (d, i) {
-					return x(i) + 'px'
+					return x(i) + 'px';
+				})
+				.style('top', function (d, i) {
+					var winVariance = win(d) ? -10 : 0,
+						avg = averageData[i],
+						pt = y(avg) + winVariance;
+
+
+					return pt + 'px';
 				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)
@@ -49,9 +60,15 @@ function tickChart() {
       return chart;
     };
 
-	chart.fnGames = function(_) {
-      if (!arguments.length) return fnGames;
-      fnGames = _;
+	chart.averageData = function(_) {
+      if (!arguments.length) return averageData;
+      averageData = _;
+      return chart;
+    };
+
+	chart.games = function(_) {
+      if (!arguments.length) return games;
+      games = _;
       return chart;
     };
 

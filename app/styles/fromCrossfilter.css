@@ -69,7 +69,7 @@ h1, h2 {
 
 .axis path, .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #ccc;
   shape-rendering: crispEdges;
 }
 

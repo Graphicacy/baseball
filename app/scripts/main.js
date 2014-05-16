@@ -1,27 +1,8 @@
 /* Adapted from crossfilter homepage */
 // Bad global setup...
-var last100 = {
-	dateRange: [new Date(2013, 9, 22), new Date(2013, 9, 30)],
-	filePath: 'data/ALL_last_100.json'
-};
 
-var last1857 = {
-	dateRange: [new Date(2013, 5, 15), new Date(2013, 9, 29)],
-	filePath: 'data/ALL_last_1857.json'
-};
 
-var last3715 = {
-	dateRange: [new Date(2012, 6, 29), new Date(2013, 9, 29)],
-	filePath: 'data/ALL_last_3715.json'
-};
-
-/* Don't use, too big! breaks everything */
-var ALL = {
-	dateRange: [new Date(1900, 04, 20), new Date(2013, 9, 29)],
-	filePath: 'data/ALL.json'
-}
-
-var settings = last3715;
+var settings = ALL.last3715;
 
 d3.json(settings.filePath, function(error, games) {
 	var formatNumber = d3.format(",d"),
@@ -74,6 +55,10 @@ d3.json(settings.filePath, function(error, games) {
 				chunkTime(d.jsDate);
 			});
 
+	function fnGames() {
+		return dimDate.top(Infinity);
+	}
+
 	$.on('team.select', function (evt, payload) {
 		currentFocus = payload.chosen;
 
@@ -81,8 +66,14 @@ d3.json(settings.filePath, function(error, games) {
 			return d.indexOf(currentFocus) != -1;
 		});
 
-		_.each(tickChartData, function (d) {
-			d.focus(currentFocus);
+		// Fngames() must come after the filter happens
+		var games = fnGames(),
+			data = U.baseball.ALL.calculateRunningAverage(games, currentFocus);
+
+		_.each(chartData, function (d) {
+			d.focus(currentFocus)
+				.averageData(data)
+				.games(games);
 		});
 
 		$.trigger('dirty.view');
@@ -95,11 +86,18 @@ d3.json(settings.filePath, function(error, games) {
 		d3.select("#active").text(formatNumber(all.value()));
 	});
 
-	var tickChartData = [
+	// Renders the specified chart or list.
+	function render(method) {
+		d3.select(this).call(method);
+	}
+
+	function fnGames() {
+		return dimDate.top(Infinity);
+	}
+
+	var chartData = [
+		lineChart(),
 		tickChart()
-			.fnGames(function () {
-				return dimDate.top(Infinity);
-			})
 	];
 
     // Render list
@@ -107,17 +105,12 @@ d3.json(settings.filePath, function(error, games) {
       .data([gameList]);
 
     // Render tick
-    var tick = d3.selectAll('.tick')
-    	.data(tickChartData);
+    var tick = d3.selectAll('.tickMark')
+    	.data(chartData);
 
 	// Render the total.
 	d3.selectAll("#total")
       .text(formatNumber(baseball.size()));
-
-	// Renders the specified chart or list.
-	function render(method) {
-		d3.select(this).call(method);
-	}
 
 	initSelect(teams);
 
