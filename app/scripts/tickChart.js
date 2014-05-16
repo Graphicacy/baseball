@@ -46,7 +46,16 @@ function tickChart() {
 				})
 				.classed('win', win)
 				.on('click', U.baseball.ALL.logGame)
-				.on('mouseenter', triggerHover)
+				.on('mouseenter', function () {
+					d3.select(this)
+						.style('background-color', 'blue')
+
+					triggerHover.apply(null, arguments);
+				})
+				.on('mouseout', function () {
+					d3.select(this)
+						.style('background-color', 'rgba(0, 0, 0, 0)')
+				})
 				.sort(U.baseball.ALL.dateCompare)
 
 			gameUpdate.exit().remove();

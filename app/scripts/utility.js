@@ -61,7 +61,7 @@ U = Utility = {
 				var matchDate = /(\d{4})(\d{2})(\d{2})/,
 					parts = dateStr.match(matchDate),
 					year = parts[1],
-					month = parts[2],
+					month = parts[2] - 1, // Months in JS Date() are base 0
 					day = parts[3];
 
 				return new Date(year, month, day);

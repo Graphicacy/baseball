@@ -25,7 +25,7 @@ function lineChart() {
 				.domain([0, 1])
 				.range([0, pxHeight]),
 			line = d3.svg.line()
-					// .interpolate('basis')
+					.interpolate('basis')
 					.x(xOfIndex)
 					.y(y),
 			win = U.baseball.ALL.didWeWin.bind(null, focus),
